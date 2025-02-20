@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elif's H2O Journey | Geçmiş</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sol Menü -->
+        <nav class="side-menu">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <span>Elif's H2O Journey</span>
+            </div>
+            <ul>
+                <li onclick="window.location.href='/'">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </li>
+                <li class="active">
+                    <i class="fas fa-history"></i> Geçmiş
+                </li>
+                <li onclick="window.location.href='{{ url_for('change_goal') }}'">
+                    <i class="fas fa-bullseye"></i> Günlük Su Hedefini Değiştir
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Ana İçerik -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1><i class="fas fa-history"></i> Su Tüketim Geçmişi</h1>
+            </header>
+
+            <div class="history-container">
+                <div class="history-card">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Hedef</th>
+                                <th>İçilen Su</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                <td>{{ row['date'] }}</td>
+                                <td>{{ row['goal'] }} ml</td>
+                                <td>{{ row['intake'] }} ml</td>
+                                <td>
+                                    {% if row['intake'] >= row['goal'] and row['goal'] > 0 %}
+                                    <span class="status success">
+                                        <i class="fas fa-check-circle"></i> Tamamlandı
+                                    </span>
+                                    {% else %}
+                                    <span class="status pending">
+                                        <i class="fas fa-hourglass-half"></i> Tamamlanmadı
+                                    </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

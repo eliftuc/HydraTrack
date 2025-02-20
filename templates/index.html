@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elif's H2O Journey | Su Takibi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sol Menü -->
+        <nav class="side-menu">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <span>Elif's H2O Journey</span>
+            </div>
+            <ul>
+                <li class="active"><i class="fas fa-home"></i> Ana Sayfa</li>
+                <li onclick="window.location.href='{{ url_for('history') }}'">
+                    <i class="fas fa-history"></i> Geçmiş
+                </li>
+                <li onclick="window.location.href='{{ url_for('change_goal') }}'">
+                    <i class="fas fa-bullseye"></i> Günlük Su Hedefini Değiştir
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Ana İçerik -->
+        <main class="main-content">
+            <!-- Üst Bar -->
+            <header class="top-bar">
+                <div class="date-navigator">
+                    <button onclick="navigateDay(-1)" class="nav-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2>{{ today_date }}</h2>
+                    <button onclick="navigateDay(1)" class="nav-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- İstatistik Kartları -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-info">
+                        <h3>Günlük Hedef</h3>
+                        <h2>{{ daily_goal }} ml</h2>
+                    </div>
+                    <i class="fas fa-bullseye"></i>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-info">
+                        <h3>İçilen Su</h3>
+                        <h2>{{ current_intake }} ml</h2>
+                    </div>
+                    <i class="fas fa-glass-water"></i>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-info">
+                        <h3>Kalan Miktar</h3>
+                        <h2>{{ daily_goal - current_intake }} ml</h2>
+                    </div>
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+            </div>
+
+            <!-- Ana Takip Bölümü -->
+            <div class="tracking-section">
+                <div class="water-visual">
+                    <div class="bottle">
+                        <div class="water-level" style="height: {{ (current_intake / daily_goal * 100) if daily_goal > 0 else 0 }}%">
+                            <div class="water-waves"></div>
+                        </div>
+                    </div>
+                    <div class="percentage">
+                        {{ "%.0f"|format((current_intake / daily_goal * 100) if daily_goal > 0 else 0) }}%
+                    </div>
+                </div>
+
+                <div class="quick-add">
+                    <h3 class="control-title">Su Miktarını Ayarla</h3>
+                    <form method="POST" action="{{ url_for('update_intake') }}" class="water-controls">
+                        <input type="hidden" name="date" value="{{ today_date }}">
+                        <button type="submit" name="action" value="decrease" class="control-btn decrease">
+                            <i class="fas fa-minus"></i>
+                            100ml
+                        </button>
+                        <div class="current-amount">
+                            <i class="fas fa-tint"></i>
+                            <span>{{ current_intake }} ml</span>
+                        </div>
+                        <button type="submit" name="action" value="increase" class="control-btn increase">
+                            <i class="fas fa-plus"></i>
+                            100ml
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Başarı Mesajı -->
+            {% if target_reached %}
+            <div class="achievement-banner">
+                <i class="fas fa-trophy"></i>
+                <div class="achievement-text">
+                    <h3>Tebrikler!</h3>
+                    <p>Bugünkü hedefinizi tamamladınız!</p>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script>
+        function navigateDay(direction) {
+            const date = new Date("{{ today_date }}");
+            date.setDate(date.getDate() + direction);
+            const newDate = date.toISOString().split('T')[0];
+            window.location.href = `/${newDate}`;
+        }
+    </script>
+</body>
+</html>

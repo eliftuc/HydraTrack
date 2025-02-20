@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elif's H2O Journey | Hedef Değiştir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sol Menü -->
+        <nav class="side-menu">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <span>Elif's H2O Journey</span>
+            </div>
+            <ul>
+                <li onclick="window.location.href='/'">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </li>
+                <li onclick="window.location.href='{{ url_for('history') }}'">
+                    <i class="fas fa-history"></i> Geçmiş
+                </li>
+                <li class="active">
+                    <i class="fas fa-bullseye"></i> Günlük Su Hedefini Değiştir
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Ana İçerik -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1><i class="fas fa-bullseye"></i> Günlük Su Hedefini Değiştir</h1>
+            </header>
+
+            <div class="goal-container">
+                <div class="goal-card">
+                    <form method="POST" class="goal-form">
+                        <div class="input-group">
+                            <label for="new_goal">Yeni günlük su hedefi (ml)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-tint"></i>
+                                <input type="number"
+                                       id="new_goal"
+                                       name="new_goal"
+                                       value="{{ daily_goal }}"
+                                       min="0"
+                                       step="100"
+                                       required>
+                                <span class="unit">ml</span>
+                            </div>
+                        </div>
+                        <div class="quick-select">
+                            <p>Önerilen hedefler:</p>
+                            <div class="quick-buttons">
+                                <button type="button" class="quick-btn" onclick="setGoal(2000)">2000 ml</button>
+                                <button type="button" class="quick-btn" onclick="setGoal(2500)">2500 ml</button>
+                                <button type="button" class="quick-btn" onclick="setGoal(3000)">3000 ml</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-check"></i> Hedefi Güncelle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function setGoal(amount) {
+            document.getElementById('new_goal').value = amount;
+        }
+    </script>
+</body>
+</html>
